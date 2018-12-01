@@ -14,7 +14,7 @@ Intro
   \__, | \__,_||_| \__,_| \___||_|   
    |___/   
 
-</pre></code>
+</code></pre>
 
 Do you struggle to improve system performance or to find root cause that makes system abnormal?   
 Guider is made to measure the amount of system resource usage and to trace system behavior.   
