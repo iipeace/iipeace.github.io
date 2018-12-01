@@ -22,18 +22,7 @@ You can analyze your performance issues effectively with this tool.
 
 Guider pursues characteristics as below.
 >1. Easy to use: just run without any setting and package installation
-
-<pre><code>
-                _      _
-   __ _  _   _ (_)  __| |   
-  / _` || | | || | / _` | / _ \| '__|   
- | (_| || |_| || || (_| ||  __/| |   
-  \__, | \__,_||_| \__,_| \___||_|   
-   |___/   
-
-</code></pre>
-2. Measure correc
-tly: count, time in from us, size in from byte
+>2. Measure correctly: count, time in from us, size in from byte
 >3. Provide all features: enough functions for experiment and analysis
 >4. Submit the report in detail: show as much information as possible
 
