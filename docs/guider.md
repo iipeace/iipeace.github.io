@@ -1,215 +1,373 @@
 [![Build Status](https://travis-ci.org/iipeace/guider.svg?branch=master)](https://travis-ci.org/iipeace/guider) 
+[![license](http://img.shields.io/badge/license-GNU-blue.svg)](https://raw.githubusercontent.com/iipeace/guider/master/LICENSE)
 [![Coverity](https://scan.coverity.com/projects/15302/badge.svg)](https://scan.coverity.com/projects/iipeace-guider) 
 [![PyPI version](https://badge.fury.io/py/guider.svg)](https://badge.fury.io/py/guider)
-[![license](http://img.shields.io/badge/license-GNU-blue.svg)](https://raw.githubusercontent.com/iipeace/guider/master/LICENSE)
+[![Download guider](https://img.shields.io/sourceforge/dt/guider.svg)](https://sourceforge.net/projects/guider/files/latest/download)
 [![Join the chat at https://gitter.im/guiderchat/Lobby](https://badges.gitter.im/guiderchat/Lobby.svg)](https://gitter.im/guiderchat/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<pre><code>
-                _      _
-   __ _  _   _ (_)  __| |   
-  / _` || | | || | / _` | / _ \| '__|   
- | (_| || |_| || || (_| ||  __/| |   
-  \__, | \__,_||_| \__,_| \___||_|   
-   |___/   
-
-</code></pre>
-
-
+![Guider_Logo_mini](https://user-images.githubusercontent.com/15862689/69008465-3062aa80-098e-11ea-8185-cfb8d7c4aafe.png)
 
 Table of contents
 =================
 <!--ts-->
-   * [Intro](#Intro)
+   * [Guider](#Guider)
    * [Output](#Output)
-      * top
-         * process
-         * thread
-         * file
-         * stack
-         * perf
-         * memory
-         * report
-         * wss
-      * control
-         * cpulimit
-         * setsched
-         * kill
-      * record
-         * thread
-         * syscall
-         * block
-         * lock
-         * kernel event
-      * funcrecord
-         * cpu
-         * memory
-      * filerecord
-      * draw
    * [How to use](#How-to-use)
-   * [Requirement](#Requirement)
-   * [Build & Installation](#Build-&-Installation)
+   * [Build & Installation](#Build--Installation)
    * [Kernel Configuration](#Kernel-Configuration)
    * [Help](#Help)
 <!--te-->
 
-
-
-Intro
+Guider
 =======
-Do you struggle to improve system performance or to find root cause that makes system abnormal?   
-Guider is made to measure the amount of system resource usage and to trace system behavior.   
-You can analyze your performance issues effectively with this tool.   
-
-Guider pursues characteristics as below.
-1. Easy to use: just run without any setting and package installation
-2. Measure correctly: count, time in from us, size in from byte
-3. Provide all features: enough functions for experiment and analysis
-4. Submit the report in detail: show as much information as possible
-
-It usually supports all platforms based on the Linux kernel as shown below.
-* Android
-* distro (Ubuntu, CentOS, RHEL, Linux Mint, Arch Linux, ...)
-* webOS
-* ccOS
-* Tizen
-* Windows (only for drawing, reporting, networking)
+Guider is an integrated performance analyzer.    
+It provides most of the features needed to measure, analyze, test and verify system performance.   
+It is made to work on all platforms from very old to modern.
 
 The features of Guider are as follows.
-![guider_mindmap](https://user-images.githubusercontent.com/15862689/46118768-27bb8c00-c243-11e8-8fae-a23c38d5bca3.png)
+* Monitoring
+* Profiling
+* Tracing
+* Visualization
+* Control
+* Logging
+* Networking
+* Test
+* Util
+
+Guider pursues characteristics as below.
+1. Easy to use: just run without any setting and installation
+2. Measure accurately: count, time in from us, size in from byte
+3. Provide all features: various functions for analysis and experiment
+4. Submit the report in detail: show as much information as possible
+5. Visualize through the browser: visualization output in svg format
+
+Guider supports almost all platforms based on the Linux kernel,
+Some other operating systems are limited.
+* distro (Ubuntu, CentOS, RHEL, MX, Mint, Arch, Manjaro, ...)
+* Android
+* ccOS (Connected Car Operating System)
+* webOS
+* Tizen
+* GENIVI Development Platform (GDP)
+* Automotive Grade Linux (AGL) Platform
+* Windows [Limited]
+* MacOS [Limited]
+
+Guider supports the following architectures.
+* x86
+* ARM
+* AArch64
 
 Output
 =======
-    $ ./guider.py top -a
+    $ python3 guider/guider.py top -a
 
-    [Top Info] [Time: 71406.120] [Interval: 1.0] [Ctxt: 52687] [Life: +0/-0] [IRQ: 12517] [Core: 24] [Task: 326/433] [Load: 0.2/0.4/0.5] [RAM: 63876] [Swap: 65491]
-               [Cycle: 2G / Inst: 6G / IPC: 2.45 / CacheMiss: 77K(6%) / BranchMiss: 857K(0%) / Clock: 22G / MinFlt: 4 / MajFlt: 0]
+    [Top Info] [Time: 4588832.570] [Inter: 1.0] [Ctxt: 314463] [Life: +0/-0] [IRQ: 26606] [Core: 40] [Task: 498/625] [Load: 0/0/0] [RAM: 125.7G] [Swap: 4.0G]
+               [Cycle: 8.3G / Inst: 5.7G / IPC: 0.69 / CacheMiss : 13.7M(23%) / BrcMiss: 25.7M(1%) / Clk: 38.7G / MinFlt: 358 / MajFlt: 0]
     ==========================================================================================================================================================
-      ID   | CPU (Usr/Ker/Blk/IRQ)| Mem (Diff/ User/Cache/Kern)| Swap (Diff/  I/O  )|NrPgRclm | BlkRW | NrFlt | NrBlk | NrSIRQ | NrMlk | NrDrt  |  Network   |
-      
+      ID   |  CPU(Usr/Ker/Blk/IRQ)|MemAvl( Per/ User/Cache/Kern)| Swap( Per/ In/Out)| PgRclm  | BlkRW | NrFlt | PrBlk | NrSIRQ | PgMlk | PgDirt |  Network   |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-    Total  |  6 %( 4 / 0 / 0 / 0 )|11074(   0/  905/50751/1146)|  0   ( 0  /  0/0  )|   0/0   |  0/0  |   0   |   0   |  1658  |   0   |   7    |   1K/11K   |
+    Total  | 10 %( 1 / 6 / 0 / 0 )|124649(  96/  453/ 5690/1787)|    0(   0/  0/  0)|   0/0   |  0/0  |   0   |   0   | 15889  | 4616  |   20   |    2K/0    |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-    Core/0 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-0   |   ? C | 1288 Mhz [1171-2441]|
-    Core/1 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-1   |   ? C | 1530 Mhz [1171-2441]|
-    Core/2 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-2   |   ? C | 1171 Mhz [1171-2441]|
-    Core/3 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-3   |   ? C | 1173 Mhz [1171-2441]|
-    Core/4 |  8 %( 1 / 2 / 0 / 0 )|#####                                                              |   powersave   |  0-4   |   ? C | 1171 Mhz [1171-2441]|
-    Core/5 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-5   |   ? C | 1175 Mhz [1171-2441]|
-    Core/6 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-0   |   ? C | 2330 Mhz [1171-2441]|
-    Core/7 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-1   |   ? C | 2342 Mhz [1171-2441]|
-    Core/8 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-2   |   ? C | 2367 Mhz [1171-2441]|
-    Core/9 |  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-3   |   ? C | 2246 Mhz [1171-2441]|
-    Core/10|100 %(99 / 0 / 0 / 0 )|###################################################################|   powersave   |  1-4   |   ? C | 2246 Mhz [1171-2441]|
-    Core/11|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-5   |   ? C | 2290 Mhz [1171-2441]|
-    Core/12|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-0   |   ? C | 1171 Mhz [1171-2441]|
-    Core/13|  4 %( 3 / 0 / 0 / 0 )|##                                                                 |   powersave   |  0-1   |   ? C | 1953 Mhz [1171-2441]|
-    Core/14|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-2   |   ? C | 1952 Mhz [1171-2441]|
-    Core/15|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-3   |   ? C | 1171 Mhz [1171-2441]|
-    Core/16| 12 %( 2 / 3 / 0 / 0 )|########                                                           |   powersave   |  0-4   |   ? C | 1953 Mhz [1171-2441]|
-    Core/17|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-5   |   ? C | 1846 Mhz [1171-2441]|
-    Core/18|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-0   |   ? C | 2278 Mhz [1171-2441]|
-    Core/19|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-1   |   ? C | 2243 Mhz [1171-2441]|
-    Core/20|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-2   |   ? C | 2247 Mhz [1171-2441]|
-    Core/21|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-3   |   ? C | 2246 Mhz [1171-2441]|
-    Core/22|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-4   |   ? C | 2440 Mhz [1171-2441]|
-    Core/23|  1 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-5   |   ? C | 2393 Mhz [1171-2441]|
+    Core/0 |100 %(66 /34 / 0 / 0 )|###################################################################|   powersave   |  0-0   |  24 C | 2874 Mhz [1171-3515]|
+    Core/1 |  7 %( 0 / 6 / 0 / 0 )|####                                                               |   powersave   |  0-1   |  22 C | 2307 Mhz [1171-3515]|
+    Core/2 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-2   |  23 C | 2165 Mhz [1171-3515]|
+    Core/3 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-3   |  22 C | 2170 Mhz [1171-3515]|
+    Core/4 | 22 %( 0 /21 / 0 / 0 )|##############                                                     |   powersave   |  0-4   |  20 C | 2763 Mhz [1171-3515]|
+    Core/5 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-8   |  24 C | 2160 Mhz [1171-3515]|
+    Core/6 | 33 %( 0 / 0 / 0 /32 )|######################                                             |   powersave   |  0-9   |  19 C | 2194 Mhz [1171-3515]|
+    Core/7 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-10  |  17 C | 2160 Mhz [1171-3515]|
+    Core/8 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-11  |  23 C | 2158 Mhz [1171-3515]|
+    Core/9 |  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  0-12  |  18 C | 2164 Mhz [1171-3515]|
+    Core/10|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-0   |  21 C | 2907 Mhz [1171-3515]|
+    Core/11|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-1   |  18 C | 2903 Mhz [1171-3515]|
+    Core/12| 11 %( 9 / 1 / 0 / 0 )|#######                                                            |   powersave   |  1-2   |  22 C | 2927 Mhz [1171-3515]|
+    Core/13|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-3   |  17 C | 2904 Mhz [1171-3515]|
+    Core/14|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-4   |  21 C | 2903 Mhz [1171-3515]|
+    Core/15|  7 %( 0 / 6 / 0 / 0 )|####                                                               |   powersave   |  1-8   |  19 C | 2912 Mhz [1171-3515]|
+    Core/16|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-9   |  24 C | 2925 Mhz [1171-3515]|
+    Core/17| 87 %( 0 /86 / 0 / 0 )|##########################################################         |   powersave   |  1-10  |  24 C | 2907 Mhz [1171-3515]|
+    Core/18|100 %( 0 /100/ 0 / 0 )|###################################################################|   powersave   |  1-11  |  20 C | 2914 Mhz [1171-3515]|
+    Core/19|  0 %( 0 / 0 / 0 / 0 )|                                                                   |   powersave   |  1-12  |  21 C | 2894 Mhz [1171-3515]|
     ==========================================================================================================================================================
-        Process      (  PID/ PPID/  Nr/ Pri)| CPU(Usr/Ker/Dly)|  Mem(RSS/Txt/Shr/Swp)| Blk( RD / WR /NrFlt)| Yld | Prmt | FD | LifeTime|     WaitChannel     |
+         Process (    PID/   PPID/  Nr/ Pri)| CPU(Usr/Ker/Dly)| VSS( RSS/Txt/Shr/Swp)| Blk(  RD/  WR/NrFlt)| SID | USER | FD | LifeTime|       Parent        |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 yes ( 2075/ 9085/   1/C  0)|  99( 99/  0/  0)|    8(  0/  0/  0/  0)|   0(   -/   -/    0)|    0|     0| 256|  0: 3:43|       RUNNING       |
-               a.out ( 2082/ 9085/   3/C  0)|  16(  6/ 10/  -)|   30(  1/  0/  1/  0)|   0(   -/   -/    0)|    0|     0| 256|  0: 3:36| futex_wait_queue_me |
-              guider ( 2182/ 9085/   1/C  0)|   3(  3/  0/  0)|  101( 62/  2/  5/  0)|   0(   -/   -/    0)|    1|     1|1024|  0: 0: 2|       RUNNING       |
-                bash ( 6960/ 6959/   1/C  0)|   0(  0/  0/  -)|   24(  6/  0/  3/  0)|   0(   -/   -/    0)|    0|     0| 256| 20:26:27|       do_wait       |
-                  vi ( 7200/ 7197/   1/C  0)|   0(  0/  0/  -)|   58(  8/  1/  5/  0)|   0(   -/   -/    0)|    0|     0|  64| 20:24:23|poll_schedule_timeout|
-                bash ( 7916/ 6959/   1/C  0)|   0(  0/  0/  -)|   24(  6/  0/  3/  0)|   0(   -/   -/    0)|    0|     0| 256| 19:57:58|       do_wait       |
-                nmbd ( 2960/    1/   1/C  0)|   0(  0/  0/  -)|   91(  4/  3/  4/  0)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:52|poll_schedule_timeout|
-               udevd ( 2222/    1/   1/C  0)|   0(  0/  0/  -)|   21(  2/  0/  1/  0)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:53|       ep_poll       |
-       kworker/14:1H ( 3288/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:51|    worker_thread    |
-              bioset ( 1265/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:54|   rescuer_thread    |
-       kworker/22:1H ( 1787/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:53|    worker_thread    |
-     /usr/sbin/apach ( 7221/ 3817/   1/C  0)|   0(  0/  0/  -)|  250( 51/  0/ 12/  0)|   0(   -/   -/    0)|    0|     0|  64| 20:23:39|   inet_csk_accept   |
-                sshd ( 1992/ 1977/   1/C  0)|   0(  0/  0/  0)|  131(  4/  0/  2/  0)|   0(   -/   -/    0)|    3|     1|  64|  0: 4:39|poll_schedule_timeout|
-               netns (  130/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:54|   rescuer_thread    |
-        kworker/20:2 ( 1962/    2/   1/C  0)|   0(  0/  0/  0)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    1|     0|  64| 1K:20:53|    worker_thread    |
-       kworker/13:1H ( 3286/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:51|    worker_thread    |
-                bash ( 9085/ 9084/   1/C  0)|   0(  0/  0/  -)|   23(  5/  0/  3/  0)|   0(   -/   -/    0)|    0|     0| 256| 1K:47:24|       do_wait       |
-     ext4-rsv-conver ( 2079/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:53|   rescuer_thread    |
-       kworker/12:1H ( 3285/    2/   1/C-20)|   0(  0/  0/  -)|    0(  0/  0/  0/  -)|   0(   -/   -/    0)|    0|     0|  64| 1K:20:51|    worker_thread    |
-    ---more---
-
->>>
-           
-    $ ./guider.py threadtop
-
-    [Top Info] [Time: 7175936.960] [Interval: 1.0] [Ctxt: 11934] [Life: +176/-177] [IRQ: 25109] [Core: 24] [Task: 389/493] [RAM: 63876] [Swap: 65491] (Unit: %/MB/NR)
-               [Cycle: 46G / Inst: 34G / IPC: 0.75 / CacheMiss: 23M(7%) / BranchMiss: 290M(4%) / Clock: 23G / MinFlt: 154,525 / MajFlt: 0]
-    ==========================================================================================================================================================
-      ID   | CPU (Usr/Ker/Blk/IRQ)| Mem (Diff/ User/Cache/Kern)| Swap (Diff/  I/O  )|NrPgRclm | BlkRW | NrFlt | NrBlk | NrSIRQ | NrMlk | NrDrt  |  Network   |
+          screen (   2451/      1/   1/C  0)| 100( 66/ 34/  0)|  11(   6/  0/  2/  0)|   0(   -/   -/    0)| 2451|peacel|  64|53d:00:22|           systemd(1)|
+             yes (1341199/1340350/   1/C  0)|  99(  0/ 99/  0)|   5(   0/  0/  0/  0)|   0(   -/   -/    0)| 2452|peacel|  64| 00:00:03|          vi(1340350)|
+    kworker/u80: (1341030/      2/   1/C  0)|  90(  0/ 90/  0)|   0(   0/  0/  -/  -)|   0(   -/   -/    0)|    -|  root|  64| 00:15:46|          kthreadd(2)|
+    kworker/u80: (1340705/      2/   1/C  0)|  26(  0/ 26/  0)|   0(   0/  0/  -/  -)|   0(   -/   -/    0)|    -|  root|  64| 02:04:59|          kthreadd(2)|
+    kworker/u80: (1340966/      2/   1/C  0)|  21(  0/ 21/  0)|   0(   0/  0/  -/  -)|   0(   -/   -/    0)|    -|  root|  64| 00:20:56|          kthreadd(2)|
+                                   [ TOTAL ]| 344.0(  72/ 271)|RSS:   1G / Swp:    0)| 0.0(   -/   -/    0)|      Yld: -|       Prmt: -|            Task: 498|
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-    Total  | 87 %(80 / 3 / 0 / 0 )| 5416( -32/ 1198/56102/1160)|  0   ( 0  /  0/0  )|   0/0   | 0/11  |   0   |   0   | 31709  |   0   | 17635  |   2K/15K   |
-    ==========================================================================================================================================================
-         Thread      (  TID/  PID/  Nr/ Pri)| CPU(Usr/Ker/Dly)|  Mem(RSS/Txt/Shr/Swp)| Blk( RD / WR /NrFlt)| Yld | Prmt | FD | LifeTime|     WaitChannel     |
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 cc1 (32544/32544/   1/C  0)| 100(100/  0/  0)|   47( 40/ 12/ 13/  0)|   0(   -/   -/    0)|    0|     1|  64|  0: 0: 2|       RUNNING       |
-                 cc1 (32646/32646/   1/C  0)| 100(100/  0/  0)|   45( 38/ 12/ 12/  0)|   0(   -/   -/    0)|    0|     3|  64|  0: 0: 2|       RUNNING       |
-                 cc1 (32738/32738/   1/C  0)| 100(100/  0/  0)|   44( 37/ 12/ 12/  0)|   0(   -/   -/    0)|    0|     3|  64|  0: 0: 1|       RUNNING       |
-                 cc1 (  319/  319/   1/C  0)| 100( 99/  1/  0)|   39( 34/ 12/ 12/  0)|   0(   -/   -/    0)|    0|     2|  64|  0: 0: 1|       RUNNING       |
-                 cc1 (  352/  352/   1/C  0)| 100( 99/  2/  0)|   39( 32/ 12/ 12/  0)|   0(   -/   -/    0)|    0|     1|  64|  0: 0: 1|       RUNNING       |
-                 cc1 (32637/32637/   1/C  0)| 100(100/  0/  0)|   48( 41/ 12/ 12/  0)|   0(   -/   -/    0)|    0|    29|  64|  0: 0: 2|       RUNNING       |
-                 cc1 (32746/32746/   1/C  0)| 100(100/  0/  0)|   42( 36/ 12/ 12/  0)|   0(   -/   -/    0)|    0|     1|  64|  0: 0: 1|       RUNNING       |
-                *cc1 (  413/  413/   1/C  0)|  68( 67/  1/  -)|   39( 32/ 12/ 12/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  436/  436/   1/C  0)|  55( 54/  1/  -)|   36( 30/ 12/ 12/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-       rs:main Q:Reg ( 2773/ 2702/   4/C  0)|  43( 33/ 10/  1)|  244(  5/  0/  2/  0)|   0(   -/   -/    0)| 2291|    26|  64| 1K:18:54| futex_wait_queue_me |
-                *cc1 (  469/  469/   1/C  0)|  35( 33/  2/  -)|   32( 24/ 12/ 12/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  490/  490/   1/C  0)|  29( 28/  1/  -)|    0(  0/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 0|                     |
-                *cc1 (  479/  479/   1/C  0)|  29( 29/  0/  -)|   34( 24/ 12/ 12/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  495/  495/   1/C  0)|  28( 28/  0/  -)|   30( 21/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  500/  500/   1/C  0)|  27( 26/  1/  -)|   30( 21/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  508/  508/   1/C  0)|  18( 18/  0/  -)|   28( 18/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                 *as (  510/  510/   1/C  0)|  12( 12/  0/  -)|   13( 10/  1/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 0|                     |
-            rsyslogd ( 2780/ 2702/   4/C  0)|  12(  7/  5/  0)|  244(  5/  0/  2/  0)|   0(   -/   -/    0)| 2699|   232|  64| 1K:18:54|      do_syslog      |
-              guider (31674/31674/   1/C  0)|   7(  7/  0/  0)|  116( 77/  2/  5/  0)|   0(   -/   -/    0)|    1|     2|1024|  0: 0: 6|       RUNNING       |
-                *cc1 (  528/  528/   1/C  0)|   7(  7/  0/  -)|   23( 14/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                *cc1 (  536/  536/   1/C  0)|   2(  2/  0/  -)|   23( 12/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|  64|  0: 0: 0|       RUNNING       |
-                 *as (  537/  537/   1/C  0)|   1(  1/  0/  -)|    9(  7/  1/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 0|                     |
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-               [+]sh (  525/  525/   1/C  0)|   0(  0/  0/  -)|   13(  2/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-    [+]arm-linux-gnu (  527/  527/   1/C  0)|   0(  0/  0/  -)|    5(  1/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-              [+]cc1 (  436/  436/   1/C  0)|  55( 54/  1/  -)|   36( 30/ 12/ 12/  0)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-    [+]arm-linux-gnu (  434/  434/   1/C  0)|   0(  0/  0/  -)|    5(  1/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-               [+]sh (  432/  432/   1/C  0)|   0(  0/  0/  -)|   13(  2/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-               [+]sh (  498/  498/   1/C  0)|   0(  0/  0/  -)|   13(  2/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-    [+]arm-linux-gnu (  499/  499/   1/C  0)|   0(  0/  0/  -)|    5(  1/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-              [+]cc1 (  495/  495/   1/C  0)|  28( 28/  0/  -)|   30( 21/ 12/  9/  0)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-              [+]cc1 (  490/  490/   1/C  0)|  29( 28/  1/  -)|    0(  0/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-               [+]sh (  491/  491/   1/C  0)|   0(  0/  0/  -)|   13(  2/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -|  0: 0: 1|          -          |
-
->>>
-           
-    # ./guider.py filetop -g init
-
-    [Top File Info] [Time: 7176036.720] [Proc: 322] [FD: 1323] [File: 400] (Unit: %/MB/NR)
-    ==========================================================================================================================================================
-          PROC       ( ID  / Pid / Nr / Pri)| FD |                                                   PATH                                                    |
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                init (    1/    0/   1/C  0)|  12|  SOCKET: 4   DEVICE: 3   PIPE: 2   EVENT: 2   NORMAL: 1   PROC: 0                                         |
-                                            |  11|  /var/log/upstart/mysql.log.1 (deleted)                                                                   |
-                                            |  10|  socket:[13414] (@/com/ubuntu/upstart)                                                                    |
-                                            |   9|  socket:[23593] (@/com/ubuntu/upstart)                                                                    |
-                                            |   8|  socket:[6241]                                                                                            |
-                                            |   7|  socket:[3098] (@/com/ubuntu/upstart)                                                                     |
-                                            |   6|  anon_inode:inotify                                                                                       |
-                                            |   5|  anon_inode:inotify                                                                                       |
-                                            |   4|  pipe:[3097]                                                                                              |
-                                            |   3|  pipe:[3097]                                                                                              |
-                                            |   2|  /dev/null                                                                                                |
-                                            |   1|  /dev/null                                                                                                |
-                                            |   0|  /dev/null                                                                                                |
+         [Z]bash ( 820918/ 820917/   1/C  0)|   0(  0/  0/  -)|   0(   0/  0/  0/  -)|   0(   -/   -/    0)|    -|     -|   -| 3d:06:10| tmux: server(820917)|
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 >>>
            
-    # ./guider.py stacktop -g syslog
+    $ python3 guider/guider.py top -R 5 -o
+    $ cat guider.out
+
+    [Top Summary Info]
+    ==========================================================================================================================================================
+     IDX  |          Interval           | CPU |   Avl/User/Cache   |  BlkRW  | Blk | SWAP | NrPgRclm  | NrFlt | NrCtx  | NrIRQ  |  NrTask  | Core | Network  |
+    ==========================================================================================================================================================
+        1 |        START -   497231.500 |  98 |  124442/962/3854   |   0/0   |   0 |    0 |    0/0    |     0 |    631 |  10660 |  482/701 |  40  |  2K/156  |
+        2 |   497231.500 -   497232.520 |  98 |  124440/963/3854   |   0/0   |   0 |    0 |    0/0    |     0 |    646 |  10506 |  482/701 |  40  |  1K/104  |
+        3 |   497232.520 -   497233.540 |  98 |  124440/964/3854   |   0/0   |   0 |    0 |    0/0    |     0 |    741 |  10562 |  482/701 |  40  |  2K/104  |
+        4 |   497233.540 -   497234.570 |  98 |  124440/964/3854   |   0/0   |   0 |    0 |    0/0    |     0 |    629 |  10489 |  482/701 |  40  |  1K/104  |
+        5 |   497234.570 -   497235.590 |  98 |  124440/964/3854   |   0/0   |   0 |    0 |    0/0    |     0 |    699 |  10602 |  482/701 |  40  |  2K/208  |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    [Top CPU Info] (Unit: %)
+    ==========================================================================================================================================================
+        COMM     (  PID  / PPID  / Nr / Pri)| Min/Avg/Max  |      1      2      3      4      5 
+    ==========================================================================================================================================================
+       [CPU]     (      -/      -/   -/   -)|  98/98.0/98  |     98     98     98     98     98 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      FahCore_a8 (  55469/  55465/  41/C 19)| 384/387.0/389|    384   3898   3898   3860   3883 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+          guider (  55767/   9591/   1/C  0)|   1/1.6/3    |      1      1      2      3      1 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    [Top RSS Info] (Unit: MB)
+    ==========================================================================================================================================================
+        COMM     (  PID  / PPID  / Nr / Pri)|  Max  |      1      2      3      4      5 
+    ==========================================================================================================================================================
+     [FREE/MIN]  (      -/      -/   -/   -)|124440 | 124442 124440 124440 124440 124440 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      FahCore_a8 (  55469/  55465/  41/C 19)|   548 |    548    548    548    548    548 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+          guider (  55767/   9591/   1/C  0)|    34 |     33     34     34     34     34 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    $ python3 guider/guider.py ttop
+
+    [Top Info] [Time: 194025.590] [Interval: 1.0] [Ctxt: 4995] [Life: +0/-0] [OOM: 0] [IRQ: 1879] [Core: 8] [Task: 333/1188] [Load: 3.1/1.9/0.9] [RAM: 62.8G]
+    ==========================================================================================================================================================
+      ID   |  CPU(Usr/Ker/Blk/IRQ)|  Avl(Diff/ User/Cache/Kern)|  Swap(Diff/ In/Out)| PgRclm  | BlkRW | NrFlt | PrBlk | NrSIRQ | PgMlk | PgDrt  |  Network   |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total  |  3 %( 1 / 0 /23 / 0 )|59874(  -3/ 3110/15153/ 355)|     0(   0/  0/  0)|   0/0   |  0/5  |   0   |   2   |  313   | 1607  | 939290 |    0/0     |
+    ==========================================================================================================================================================
+              Thread (  TID/  PID/  Nr/ Pri)| CPU(Usr/Ker/Dly)|  VSS(RSS/Txt/Shr/Swp)| Blk(  RD/  WR/NrFlt)| Yld | Prmt | FD | LifeTime|       Process       |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+              guider ( 8160/ 8160/   1/C  0)|   3(  2/  0/  0)|   66( 33/  2/  6/  0)|   0(   -/   -/    0)|    1|     0|2048| 00:00:02|         guider(8160)|
+     gnome-terminal- ( 4864/ 4864/   4/C  0)|   1(  0/  0/  -)|  627( 57/  0/ 40/  0)|   0(   -/   -/    0)|    -|     -| 128| 2d:05:52|gnome-terminal-(4864)|
+                Xorg ( 1525/ 1525/   2/C  0)|   1(  0/  0/  -)|  431( 84/  0/ 48/  0)|   0(   -/   -/    0)|    -|     -| 128| 2d:05:53|           Xorg(1525)|
+                                   [ TOTAL ]|     5(   2/   0)|RSS: 174M / Swp:    0)| 0.0(   -/   -/    0)|      Yld: 1|       Prmt: 0|              Task: 3|
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    [D]kworker/u16:0 ( 7784/ 7784/   1/C  0)|   0(  0/  0/  -)|    0(  0/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -| 00:07:07|                    -|
+             [D]pool ( 8024/ 2450/  13/C  0)|   0(  0/  0/  -)| 1025( 82/  1/  -/  -)|   0(   -/   -/    0)|    -|     -|   -| 00:04:31|                    -|
+      [D]usb-storage ( 7825/ 7825/   1/C  0)|   0(  0/  0/  -)|    0(  0/  0/  -/  -)|   0(   -/   -/    0)|    -|     -|   -| 00:06:38|                    -|
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py utop -g yes -H
+
+    [Top Usercall Info] [Time: 82094.260000] [Interval: 1.001784] [NrSamples: 955] [yes(7202): 28%(Usr/27%+Sys/0%)] [SampleTime: 0.000100]
+    ==========================================================================================================================================================
+     Usage  |                                                                 Function [Path]                                                                 
+    ==========================================================================================================================================================
+      35.6% | _IO_file_xsputn@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                  
+               100.0% |  <- fputs_unlocked@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/usr/bin/yes.coreutils] <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      17.8% | fputs_unlocked@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                   
+               100.0% |  <- ??[/usr/bin/yes.coreutils] <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      16.1% | __libc_start_main@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      14.7% | memcpy@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                           
+               100.0% |  <- _IO_file_xsputn@GLIBC_2.17[/lib/libc-2.24.so] <- fputs_unlocked@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/usr/bin/yes.coreutils]
+                         <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      12.3% | strlen@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                           
+               100.0% |  <- fputs_unlocked@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/usr/bin/yes.coreutils] <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       3.0% | _IO_file_write@GLIBC_2.17 [/lib/libc-2.24.so]                                                                                                   
+               100.0% |  <- ??[/lib/libc-2.24.so] <- _IO_do_write@GLIBC_2.17[/lib/libc-2.24.so] <- _IO_file_xsputn@GLIBC_2.17[/lib/libc-2.24.so]
+                         <- fputs_unlocked@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/usr/bin/yes.coreutils]
+                         <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+
+    # python3 guider/guider.py utop -g node -H -q JITSYM
+
+    [Top Usercall Info] [Time: 7249986.900] [Interval: 1.015] [Samples: 442] [SYS: 2%/120G] [node(1068318): 50%(U46%+S3%)/897M] [guider(1068338): 53%/256M] [Freq:
+    ==========================================================================================================================================================
+     Usage  | Function [PATH] <Sample>
+    ==========================================================================================================================================================
+      18.6% | write@GLIBC_2.28 [/usr/lib/x86_64-linux-gnu/libpthread-2.31.so] <Cnt: 82>
+               100.0% |  <- 0x13250[/usr/lib/x86_64-linux-gnu/libuv.so.1.0.0] <- uv_fs_write[/usr/lib/x86_64-linux-gnu/libuv.so.1.0.0]
+                         <- 0x573090[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- JIT[JIT] <- LazyCompile:*writeSync fs.js:551[JIT]
+                         <- Builtin:ArgumentsAdaptorTrampoline[JIT] <- LazyCompile:*writeOrBuffer _stream_writable.js:365[JIT]
+                         <- LazyCompile:*log console.js:199[JIT] <- Builtin:ArgumentsAdaptorTrampoline[JIT] <- Builtin:JSEntryTrampoline[JIT] <- JIT[JIT]
+                         <- 0xab0110[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- 0xab0720[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- v8::internal::Execution::Call(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::O
+                         <- v8::Function::Call(v8::Local<v8::Context>, v8::Local<v8::Value>, int, v8::Local<v8::Value>*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- 0x630d40[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- JIT[JIT] <- LazyCompile:* /home/peacelee/test/test.js:1[JIT]
+                         <- Builtin:InterpreterEntryTrampoline[JIT] <- Builtin:JSEntryTrampoline[JIT] * 8 <- JIT[JIT]
+                         <- 0xab0110[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- 0xab0720[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- v8::internal::Execution::Call(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::O
+                         <- v8::Function::Call(v8::Local<v8::Context>, v8::Local<v8::Value>, int, v8::Local<v8::Value>*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- 0x52cae0[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- node::LoadEnvironment(node::Environment*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- node::Start(v8::Isolate*, node::IsolateData*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char
+                         <- node::Start(int, char**)[/usr/lib/x86_64-linux-gnu/libnode.so.64] <Cnt: 82>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       3.8% | LazyCompile:*writeOrBuffer _stream_writable.js:365 [JIT] <Cnt: 17>
+                64.7% |  <- LazyCompile:*log console.js:199[JIT] <- Builtin:ArgumentsAdaptorTrampoline[JIT] <- Builtin:JSEntryTrampoline[JIT] <- JIT[JIT]
+                         <- 0xab0110[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- 0xab0720[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- v8::internal::Execution::Call(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::O
+                         <- v8::Function::Call(v8::Local<v8::Context>, v8::Local<v8::Value>, int, v8::Local<v8::Value>*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- 0x630d40[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- JIT[JIT] <- LazyCompile:* /home/peacelee/test/test.js:1[JIT]
+                         <- Builtin:InterpreterEntryTrampoline[JIT] <- Builtin:JSEntryTrampoline[JIT] * 8 <- JIT[JIT]
+                         <- 0xab0110[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- 0xab0720[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- v8::internal::Execution::Call(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::O
+                         <- v8::Function::Call(v8::Local<v8::Context>, v8::Local<v8::Value>, int, v8::Local<v8::Value>*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- 0x52cae0[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- node::LoadEnvironment(node::Environment*)[/usr/lib/x86_64-linux-gnu/libnode.so.64]
+                         <- node::Start(v8::Isolate*, node::IsolateData*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char
+                         <- node::Start(int, char**)[/usr/lib/x86_64-linux-gnu/libnode.so.64] <- main[/usr/bin/node]
+                         <- __libc_start_main@GLIBC_2.2.5[/usr/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 11>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py systop -g yes -H
+
+    [Top Syscall Info] [Time: 82043.230000] [Interval: 1.000940] [NrSamples: 634] [yes(7202): 5%(Usr/4%+Sys/0%)] 
+    ==========================================================================================================================================================
+     Usage  |                                                                 Function [Count]                                                                
+    ==========================================================================================================================================================
+     100.0% | write [Cnt: 634, Tot: 0.830203, Avg: 0.001309, Max: 0.005875, Err: 0]                                                                           
+               100.0% |  <- ??[/lib/libc-2.24.so] <- _IO_file_write@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/lib/libc-2.24.so]
+                         <- _IO_do_write@GLIBC_2.17[/lib/libc-2.24.so] <- _IO_file_xsputn@GLIBC_2.17[/lib/libc-2.24.so]
+                         <- fputs_unlocked@GLIBC_2.17[/lib/libc-2.24.so] <- ??[/usr/bin/yes.coreutils]
+                         <- __libc_start_main@GLIBC_2.17[/lib/libc-2.24.so]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py btop -g a.out -H
+
+    [Top Breakcall Info] [Time: 4542869.660] [Interval: 1.001] [NrSamples: 994] [a.out(1219772): 7%(Usr/0%+Sys/6%)] [guider(1219775): 97%]
+    ==========================================================================================================================================================
+     Usage  | Function [PATH] <Interval>
+    ==========================================================================================================================================================
+      16.7% | __mempcpy_sse2_unaligned_erms [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 166, Avg: 0.005994, Min: 0.002999, Max: 0.012299]
+               100.0% |  <- _IO_new_file_xsputn[/lib/x86_64-linux-gnu/libc-2.31.so] <- __vfprintf_internal[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- printf[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      16.7% | _IO_new_file_xsputn [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 166, Avg: 0.005997, Min: 0.002988, Max: 0.012302]
+               100.0% |  <- __vfprintf_internal[/lib/x86_64-linux-gnu/libc-2.31.so] <- printf[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      11.2% | __strchrnul_sse2 [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 111, Avg: 0.008974, Min: 0.006034, Max: 0.012381]
+               100.0% |  <- __vfprintf_internal[/lib/x86_64-linux-gnu/libc-2.31.so] <- printf[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       5.5% | close@GLIBC_2.4 [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 55, Avg: 0.017763, Min: 0.017895, Max: 0.018863]
+               100.0% |  <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       5.5% | __vfprintf_internal [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 55, Avg: 0.017764, Min: 0.017838, Max: 0.018741]
+               100.0% |  <- printf[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       5.5% | _IO_file_overflow@GLIBC_2.2.5 [/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 55, Avg: 0.017764, Min: 0.017924, Max: 0.018732]
+               100.0% |  <- _IO_new_file_xsputn[/lib/x86_64-linux-gnu/libc-2.31.so] <- __vfprintf_internal[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- printf[/lib/x86_64-linux-gnu/libc-2.31.so]
+                         <- asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd
+                         <- printPeace2[/home/peacelee/test/a.out] <- printPeace[/home/peacelee/test/a.out] <- main[/home/peacelee/test/a.out]
+                         <- __libc_start_main[/lib/x86_64-linux-gnu/libc-2.31.so] <- _start[/home/peacelee/test/a.out]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py pytop -g iotop -H
+
+    [Top Pycall Info] [Time: 7469667.000] [Interval: 1.003] [NrSamples: 283] [iotop(2943070): 13%(Usr/10%+Sys/2%)] [guider(2943073): 53%] [SampleRate: 0.001]
+    ==========================================================================================================================================================
+     Usage  | Function [PATH] <Sample>
+    ==========================================================================================================================================================
+      56.9% | WAIT(poll@GLIBC_2.2.5) [/usr/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 161>
+               100.0% |  <- run[/usr/lib/python3/dist-packages/iotop/ui.py] <- run_iotop_window[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- wrapper[/usr/lib/python3.8/curses/__init__.py] <- run_iotop[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <lambda>[/usr/lib/python3/dist-packages/iotop/ui.py] <- main[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <module>[/usr/sbin/iotop] <Cnt: 161>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+      10.2% | parse_proc_pid_status [/usr/lib/python3/dist-packages/iotop/data.py] <Cnt: 29>
+               100.0% |  <- get_cmdline[/usr/lib/python3/dist-packages/iotop/data.py] <- format[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- get_data[/usr/lib/python3/dist-packages/iotop/ui.py] <- refresh_display[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- run[/usr/lib/python3/dist-packages/iotop/ui.py] <- run_iotop_window[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- wrapper[/usr/lib/python3.8/curses/__init__.py] <- run_iotop[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <lambda>[/usr/lib/python3/dist-packages/iotop/ui.py] <- main[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <module>[/usr/sbin/iotop] <Cnt: 29>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       4.6% | read@GLIBC_2.26 [/usr/lib/x86_64-linux-gnu/libc-2.31.so] <Cnt: 13>
+                76.9% |  <- parse_proc_pid_status[/usr/lib/python3/dist-packages/iotop/data.py] <- get_cmdline[/usr/lib/python3/dist-packages/iotop/data.py]
+                         <- format[/usr/lib/python3/dist-packages/iotop/ui.py] <- get_data[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- refresh_display[/usr/lib/python3/dist-packages/iotop/ui.py] <- run[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- run_iotop_window[/usr/lib/python3/dist-packages/iotop/ui.py] <- wrapper[/usr/lib/python3.8/curses/__init__.py]
+                         <- run_iotop[/usr/lib/python3/dist-packages/iotop/ui.py] <- <lambda>[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- main[/usr/lib/python3/dist-packages/iotop/ui.py] <- <module>[/usr/sbin/iotop] <Cnt: 10>
+                23.1% |  <- get_cmdline[/usr/lib/python3/dist-packages/iotop/data.py] <- format[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- get_data[/usr/lib/python3/dist-packages/iotop/ui.py] <- refresh_display[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- run[/usr/lib/python3/dist-packages/iotop/ui.py] <- run_iotop_window[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- wrapper[/usr/lib/python3.8/curses/__init__.py] <- run_iotop[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <lambda>[/usr/lib/python3/dist-packages/iotop/ui.py] <- main[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <module>[/usr/sbin/iotop] <Cnt: 3>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       4.2% | format [/usr/lib/python3/dist-packages/iotop/ui.py] <Cnt: 12>
+               100.0% |  <- get_data[/usr/lib/python3/dist-packages/iotop/ui.py] <- refresh_display[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- run[/usr/lib/python3/dist-packages/iotop/ui.py] <- run_iotop_window[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- wrapper[/usr/lib/python3.8/curses/__init__.py] <- run_iotop[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <lambda>[/usr/lib/python3/dist-packages/iotop/ui.py] <- main[/usr/lib/python3/dist-packages/iotop/ui.py]
+                         <- <module>[/usr/sbin/iotop] <Cnt: 12>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py ftop -g nginx
+
+    [Top File Info] [Time: 497555.620] [Proc: 41] [FD: 2,047] [File: 87] [CPU: 95%(Usr:54%/Sys:41%)] (Unit: %/MB/NR)
+    ==========================================================================================================================================================
+        Process      ( ID  / Pid / Nr / Pri)| FD |                                                   Path                                                    |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+               nginx ( 1348/ 1333/   1/C  0)|  49| SOCKET: 42   NORMAL: 3   DEVICE: 2   EVENT: 2   PIPE: 0   PROC: 0                                         |
+                                            |  49| /var/log/nginx/error.log (0, O_WRONLY|O_APPEND|O_CLOEXEC)                                                 |
+                                            |  48| socket:[32124]                                                                                            |
+                                            |  37| socket:[32102]                                                                                            |
+                                            |  36| anon_inode:[eventfd]                                                                                      |
+                                            |  35| anon_inode:[eventpoll]                                                                                    |
+                                            |  34| socket:[32073]                                                                                            |
+                                            |   8| socket:[32074]                                                                                            |
+                                            |   7| socket:[20935]                                                                                            |
+                                            |   6| socket:[20934] (TCP:0.0.0.0:80/LISTEN)                                                                    |
+                                            |   5| /var/log/nginx/access.log (0, O_WRONLY|O_APPEND|O_CLOEXEC)                                                |
+                                            |   3| socket:[32046]                                                                                            |
+                                            |   2| /var/log/nginx/error.log (0, O_WRONLY)                                                                    |
+                                            |   1| /dev/null (0, O_RDWR)                                                                                     |
+                                            |   0| /dev/null (0, O_RDWR)                                                                                     |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py stacktop -g syslog
 
     [Top Info] [Time: 7176163.830] [Interval: 1.0] [Ctxt: 2914] [Life: +13/-12] [IRQ: 5103] [Core: 24] [Task: 328/435] [RAM: 63876] [Swap: 65491] (Unit: %/MB/NR)
                [Cycle: 2G / Inst: 3G / IPC: 1.34 / CacheMiss: 6M(34%) / BranchMiss: 4M(0%) / Clock: 23G / MinFlt: 53,257 / MajFlt: 0]
@@ -235,7 +393,7 @@ Output
 
 >>>
            
-    # ./guider.py perftop -g yes
+    # python3 guider/guider.py ptop -g yes
 
     [Top Info] [Time: 7181955.420] [Interval: 1.0] [Ctxt: 121] [Life: +0/-0] [IRQ: 1947] [Core: 24] [Task: 317/424] [RAM: 63876] [Swap: 65491] (Unit: %/MB/NR)
     ==========================================================================================================================================================
@@ -251,28 +409,83 @@ Output
 
 >>>
            
-    # ./guider.py memtop
+    # python3 guider/guider.py mtop
 
-    [Top Info] [Time: 7176233.650] [Interval: 1.0] [Ctxt: 289] [Life: +2/-2] [IRQ: 1397] [Core: 24] [Task: 323/430] [RAM: 63876] [Swap: 65491] (Unit: %/MB/NR)
-               [Cycle: 127M / Inst: 121M / IPC: 0.95 / CacheMiss: 280K(23%) / BranchMiss: 437K(1%) / Clock: 22G / MinFlt: 714 / MajFlt: 0]
+    [Top Info] [Time: 1144292.910] [Inter: 1.0] [Ctxt: 739] [Life: +0/-0] [IRQ: 10740] [Core: 40] [Task: 509/725] [Load: 38/38/38] [RAM: 125.7G] [Swap: 4.0G]
+               [N0-DMA     > diff:       0 / free:  15.5M / high:  32.0K / low:  20.0K / managed:  15.5M / min:   8.0K / present:  15.6M / spanned:  16.0M ]
+               [N0-DMA32   > diff:       0 / free:   1.9G / high:   4.6M / low:   2.8M / managed:   1.9G / min: 956.0K / present:   1.9G / spanned:   4.0G ]
+               [N0-Device  > diff:       0 / free:      0 / high:      0 / low:      0 / managed:      0 / min:      0 / present:      0 / spanned:      0 ]
+               [N0-Movable > diff:       0 / free:      0 / high:      0 / low:      0 / managed:      0 / min:      0 / present:      0 / spanned:      0 ]
+               [N0-Normal  > diff:   -3.9M / free: 113.4G / high: 318.7M / low: 191.9M / managed: 123.9G / min:  65.1M / present: 126.0G / spanned: 126.0G ]
     ==========================================================================================================================================================
-      ID   | CPU (Usr/Ker/Blk/IRQ)| Mem (Diff/ User/Cache/Kern)| Swap (Diff/  I/O  )|NrPgRclm | BlkRW | NrFlt | NrBlk | NrSIRQ | NrMlk | NrDrt  |  Network   |
+      ID   |  CPU(Usr/Ker/Blk/IRQ)|  Avl( Per/ User/Cache/Kern)|  Swap( Per/ In/Out)| PgRclm  | BlkRW | NrFlt | PrBlk | NrSIRQ | PgMlk | PgDrt  |  Network   |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-    Total  |  1 %( 0 / 0 / 0 / 0 )| 4706(   1/  865/57151/1154)|  0   ( 0  /  0/0  )|   0/0   |  0/0  |   0   |   0   |  484   |   0   |   35   |   1K/4K    |
+    Total  | 98 %(97 / 0 / 0 / 0 )|12417(  96/ 1117/ 7915/1739)|     0(   0/  0/  0)|   0/0   |  0/0  |   0   |   0   | 12975  | 4613  |   67   |   2K/52    |
     ==========================================================================================================================================================
         Process      (  PID/ PPID/  Nr/ Pri)| CPU(Usr/Ker/Dly)|  Mem(RSS/Txt/Shr/Swp)| Blk( RD / WR /NrFlt)| Yld | Prmt | FD | LifeTime|     WaitChannel     |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
-              guider (22307/ 9085/   1/C  0)|   2(  2/  0/  0)|  101( 62/  2/  5/  0)|   0(   -/   -/    0)|    1|     0|1024|  0: 0: 5|       RUNNING       |
-                                 (1)[STACK] | SIZE:   0M / RSS:   0M / PSS:   0M / SWAP:   0M / HUGE:  0M / LOCK:   0K / SDRT:   0K / PDRT: 140K / NOPM:   0K|
-                                   (1)[SHM] | SIZE:   0M / RSS:   0M / PSS:   0M / SWAP:   0M / HUGE:  0M / LOCK:   0K / SDRT:   0K / PDRT:   0K / NOPM:   0K|
-                                 (19)[FILE] | SIZE:  44M / RSS:   6M / PSS:   2M / SWAP:   0M / HUGE:  0M / LOCK:   0K / SDRT:   0K / PDRT: 632K / NOPM:  31M|
-                                   (3)[ETC] | SIZE:   0M / RSS:   0M / PSS:   0M / SWAP:   0M / HUGE:  0M / LOCK:   0K / SDRT:   0K / PDRT:   0K / NOPM:   0K|
-                                 (12)[ANON] | SIZE:  56M / RSS:  56M / PSS:  56M / SWAP:   0M / HUGE:  0M / LOCK:   0K / SDRT:   0K / PDRT:  56M / NOPM:   0K|
+     FahCore_a8 ( 214159/ 214155/  41/C 19)|3792(3791/  0/  -)|3219( 548/ 14/ 13/  0)|   0(   -/   -/    0)| 1197|fahcli|  64| 00:20:54|FAHCoreWrapper(214155|
+                               MEM(STACK/1) | VSS: 132.0K / RSS:  48.0K / PSS:  48.0K / SWAP:      0 / HUGE:    0 / LOCK:     0 / SDRT:      0 / PDRT:  48.0K|
+                                MEM(FILE/6) | VSS:  20.4M / RSS:  13.2M / PSS:  10.7M / SWAP:      0 / HUGE:    0 / LOCK:     0 / SDRT:      0 / PDRT:  92.0K|
+                                 MEM(ETC/3) | VSS:  20.0K / RSS:   4.0K / PSS:      0 / SWAP:      0 / HUGE:    0 / LOCK:     0 / SDRT:      0 / PDRT:      0|
+                              MEM(ANON/165) | VSS:   3.1G / RSS: 539.7M / PSS: 539.7M / SWAP:      0 / HUGE:    0 / LOCK:     0 / SDRT:      0 / PDRT: 539.7M|
+                                   MEM(SUM) | VmPeak: 4.0G, VmHWM: 548.6M, VmData: 948.2M, HugetlbPages: 0, RssAnon: 535.5M, RssFile: 13.2M, RssShmem: 0     |
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 >>>
            
-    # ./guider.py wsstop -g yes
+    # python3 guider/guider.py ntop
+
+    [Top Info] [Time: 186473.960] [Interval: 1.0] [Ctxt: 7865] [Life: +0/-0] [OOM: 0] [IRQ: 4229] [Core: 8] [Task: 328/1171] [Load: 0.5/0.3/0.3] [RAM: 62.8G]
+    ==========================================================================================================================================================
+      ID   |  CPU(Usr/Ker/Blk/IRQ)|  Avl(Diff/ User/Cache/Kern)|  Swap(Diff/ In/Out)| PgRclm  | BlkRW | NrFlt | PrBlk | NrSIRQ | PgMlk | PgDrt  |  Network   |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total  |  1 %( 0 / 0 / 0 / 0 )|59939(  -2/ 3054/ 6429/ 350)|     0(   0/  0/  0)|   0/0   |  0/0  |   0   |   0   |  1661  | 1607  |  343   |  652K/9K   |
+    ==========================================================================================================================================================
+                    Network                  |                        Receive                        |                       Transfer                        |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+          Dev        |          IP           |   Size   |  Packet  |  Error   |   Drop   | Multicast |   Size   |  Packet  |  Error   |   Drop   | Multicast |
+    ==========================================================================================================================================================
+             docker0 |        166.104.101.26 |        0 |        0 |        0 |        0 |         0 |        0 |        0 |        0 |        0 |         0 |
+                eno1 |         166.104.101.1 |   665.9K |      475 |        0 |        0 |         1 |    12.0K |      168 |        0 |        0 |         0 |
+     enx201601190a25 |        166.104.101.27 |       48 |        1 |        0 |        0 |         0 |        0 |        0 |        0 |        0 |         0 |
+                  lo |             127.0.0.1 |        0 |        0 |        0 |        0 |         0 |        0 |        0 |        0 |        0 |         0 |
+              virbr0 |                       |        0 |        0 |        0 |        0 |         0 |        0 |        0 |        0 |        0 |         0 |
+          virbr0-nic |                       |        0 |        0 |        0 |        0 |         0 |        0 |        0 |        0 |        0 |         0 |
+           [ TOTAL ] |                       |   666.0K |      476 |        0 |        0 |         1 |    12.0K |      168 |        0 |        0 |         0 |
+    ==========================================================================================================================================================
+
+>>>
+           
+    # python3 guider/guider.py disktop
+    
+    [Top Info] [Time: 262411.830] [Inter: 1.0] [Ctxt: 802] [Life: +0/-0] [IRQ: 10675] [Core: 40] [Task: 481/700] [Load: 38/38/38] [RAM: 125.7G] [Swap: 4.0G]
+    ==========================================================================================================================================================
+      ID   |  CPU(Usr/Ker/Blk/IRQ)|  Avl( Per/ User/Cache/Kern)|  Swap( Per/ In/Out)| PgRclm  | BlkRW | NrFlt | PrBlk | NrSIRQ | PgMlk | PgDrt  |  Network   |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total  | 98 %(97 / 0 / 0 / 0 )|124431(  96/  994/ 3531/1733)|     0(   0/  0/  0)|   0/0   |  0/0  |   0   |   0   | 11620  | 4613  |   70   |    1K/0   |
+    ==========================================================================================================================================================
+              DEV           |BUSY| AVQ | READ  | WRITE |   FREE(   DIFF)|USAGE| TOTAL |  AVF  |   FS   |                 MountPoint <Option>                 |
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    /dev/sda2               |  0%|    0|      0|      0| 670.6G(      0)|  28%| 937.4G|  57.6M|  ext4  | / <rw,relatime>                                     |
+    /dev/loop4              |  0%|    0|      0|      0|      0(      0)| 100%|  30.0M|      0|squashfs| /snap/snapd/9279 <ro,nodev,relatime>                |
+    /dev/loop5              |  0%|    0|      0|      0|      0(      0)| 100%|  70.0M|      0|squashfs| /snap/lxd/16922 <ro,nodev,relatime>                 |
+    /dev/sda1               |  0%|    0|      0|      0| 503.0M(      0)|   1%| 510.0M|      0|  vfat  | /boot/efi <rw,relatime>                             |
+    /dev/loop1              |  0%|    0|      0|      0|      0(      0)| 100%|  55.0M|      0|squashfs| /snap/core18/1885 <ro,nodev,relatime>               |
+    /dev/loop2              |  0%|    0|      0|      0|      0(      0)| 100%|  70.0M|      0|squashfs| /snap/lxd/16894 <ro,nodev,relatime>                 |
+    /dev/loop0              |  0%|    0|      0|      0|      0(      0)| 100%|  55.0M|      0|squashfs| /snap/core18/1880 <ro,nodev,relatime>               |
+    /dev/loop3              |  0%|    0|      0|      0|      0(      0)| 100%|  30.0M|      0|squashfs| /snap/snapd/8790 <ro,nodev,relatime>                |
+    /run/snapd/ns           |  0%|    0|      0|      0|  12.6G(      0)|   0%|  12.6G|  15.7M| tmpfs  | /run/snapd/ns                                       |
+    /run/user/1004          |  0%|    0|      0|      0|  12.6G(      0)|   0%|  12.6G|  15.7M| tmpfs  | /run/user/1004 <rw,nosuid,nodev,relatime>           |
+    /sys/fs/cgroup          |  0%|    0|      0|      0|  62.9G(      0)|   0%|  62.9G|  15.7M| tmpfs  | /sys/fs/cgroup <ro,nosuid,nodev,noexec>             |
+    /run                    |  0%|    0|      0|      0|  12.6G(      0)|   0%|  12.6G|  15.7M| tmpfs  | /run <rw,nosuid,nodev,noexec,relatime>              |
+    /run/lock               |  0%|    0|      0|      0|   5.0M(      0)|   0%|   5.0M|  15.7M| tmpfs  | /run/lock <rw,nosuid,nodev,noexec,relatime>         |
+    /dev/shm                |  0%|    0|      0|      0|  62.9G(      0)|   0%|  62.9G|  15.7M| tmpfs  | /dev/shm <rw,nosuid,nodev>                          |
+    ==========================================================================================================================================================
+
+>>>
+           
+    # python3 guider/guider.py wtop -g yes
 
     [Top Info] [Time: 7176629.490] [Interval: 1.0] [Ctxt: 195] [Life: +0/-0] [IRQ: 2688] [Core: 24] [Task: 327/434] [RAM: 63876] [Swap: 65491] (Unit: %/MB/NR)
                [Cycle: 2G / Inst: 6G / IPC: 2.75 / CacheMiss: 202K(19%) / BranchMiss: 325K(0%) / Clock: 23G / MinFlt: 4 / MajFlt: 0]
@@ -296,8 +509,59 @@ Output
 
 >>>
            
-    $ ./guider.py reptop -j . -u
-    $ cat guider.report
+    # python3 guider/guider.py btrace -g a.out -H
+
+             _start/0x55e321d151ee [/home/peacelee/test/a.out]
+               __libc_start_main/0x7ffb520af0b3 [/lib/x86_64-linux-gnu/libc-2.31.so]
+                 main/0x55e321d15478 [/home/peacelee/test/a.out]
+                   printPeace/0x55e321d15451 [/home/peacelee/test/a.out]
+                     printPeace2/0x55e321d15392 [/home/peacelee/test/a.out]
+                       asdfasdfasdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfas/0x55e321d152e2 [/home/peacelee/test/a.out]
+    0.000384             read@GLIBC_2.26/0x7ffb52199130(-0x1,0x0,0x0,0x0,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000391             close@GLIBC_2.4/0x7ffb52199970(-0x1,0x0,0xffffffffffffff80,0x0,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000398             printf/0x7ffb520ece10(0x55e321d1600a,0x9,0xffffffffffffff80,0x0,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000405               __vfprintf_internal/0x7ffb521019e0(0x7ffb522746a0,0x55e321d1600a,0x7fff41688b40,0x55e321d1600a,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000412                 __strchrnul_sse2/0x7ffb5213c820(0x55e321d1600a,0x25,0x7fff41688b40,0x55e321d1600a,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000420                 _IO_new_file_xsputn/0x7ffb5211a750(0x7ffb522746a0,0x55e321d1600a,0x3,0x55e321d1600a,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000426                   __mempcpy_sse2_unaligned_erms/0x7ffb52146d00(0x55e322290330,0x55e321d1600a,0x3,0x55e321d1600a,0x0,0x5) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000432                 _itoa_word/0x7ffb520e6760(0x9,0x7fff41688af8,0xa,0x55e321d1600e,-0x1,0x3) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000439                 _IO_new_file_xsputn/0x7ffb5211a750(0x7ffb522746a0,0x7fff41688af7,0x1,0x55e321d1600e,0x0,0x3) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000446                   __mempcpy_sse2_unaligned_erms/0x7ffb52146d00(0x55e322290333,0x7fff41688af7,0x1,0x55e321d1600e,0x0,0x3) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000452                 __strchrnul_sse2/0x7ffb5213c820(0x55e321d1600f,0x25,0x1,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000458                 _IO_new_file_xsputn/0x7ffb5211a750(0x7ffb522746a0,0x55e321d1600f,0x1,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000464                   __mempcpy_sse2_unaligned_erms/0x7ffb52146d00(0x55e322290334,0x55e321d1600f,0x1,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000471                   _IO_file_overflow@GLIBC_2.2.5/0x7ffb5211bf00(0x7ffb522746a0,-0x1,0xc00,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000480                   _IO_do_write@GLIBC_2.2.5/0x7ffb5211ba20(0x7ffb522746a0,0x55e322290330,0x5,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000486                     _IO_file_write@GLIBC_2.2.5/0x7ffb52119fe0(0x7ffb522746a0,0x55e322290330,0x5,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.000493                       write@GLIBC_2.2.5/0x7ffb521991d0(0x1,0x55e322290330,0x5,0x55e321d1600f,0x0,0x4) [/lib/x86_64-linux-gnu/libc-2.31.so]
+
+>>>
+           
+    # python3 guider/guider.py  btrace -g yes -H -c \|getret
+
+    0.532473       0x2cf0/0x560d7fd28cf0(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532488         0x4c40/0x560d7fd2ac40(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532501           write@GLIBC_2.2.5/0x7faab22f1040(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.532516           write@GLIBC_2.2.5[RET]=0x2000(8192)/0.000015 -> 0x4c40/0x560d7fd26000 [/usr/bin/yes]
+    0.532557         0x4c40[RET]=0x2000(8192)/0.000069 -> 0x2cf0/0x560d7fd26000 [/usr/bin/yes]
+    0.532618       0x2cf0[RET]=0x2000(8192)/0.000145 -> 0x2580/0x560d7fd26000 [/usr/bin/yes]
+    0.532678       0x2cf0/0x560d7fd28cf0(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532691         0x4c40/0x560d7fd2ac40(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532706           write@GLIBC_2.2.5/0x7faab22f1040(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.532721           write@GLIBC_2.2.5[RET]=0x2000(8192)/0.000015 -> 0x4c40/0x560d7fd26000 [/usr/bin/yes]
+    0.532798         0x4c40[RET]=0x2000(8192)/0.000107 -> 0x2cf0/0x560d7fd26000 [/usr/bin/yes]
+    0.532881       0x2cf0[RET]=0x2000(8192)/0.000204 -> 0x2580/0x560d7fd26000 [/usr/bin/yes]
+    0.532946       0x2cf0/0x560d7fd28cf0(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532961         0x4c40/0x560d7fd2ac40(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/usr/bin/yes]
+    0.532975           write@GLIBC_2.2.5/0x7faab22f1040(0x1,0x560d81815440,0x2000,0x7faab23c8640,0x560d81815440,0x7c) [/lib/x86_64-linux-gnu/libc-2.31.so]
+    0.532990           write@GLIBC_2.2.5[RET]=0x2000(8192)/0.000015 -> 0x4c40/0x560d7fd26000 [/usr/bin/yes]
+    0.533067         0x4c40[RET]=0x2000(8192)/0.000106 -> 0x2cf0/0x560d7fd26000 [/usr/bin/yes]
+    0.533194       0x2cf0[RET]=0x2000(8192)/0.000248 -> 0x2580/0x560d7fd26000 [/usr/bin/yes]
+
+>>>
+           
+    $ python3 guider/guider.py rtop &
+    $ cat /tmp/guider.report
 
     {
       "task": {
@@ -426,61 +690,145 @@ Output
     }
 
 >>>
-
-    # ./guider.py cpulimit -g 22371:50
-
-
-                _      _
-       __ _  _   _ (_)  __| |  ___  _ __
-      / _` || | | || | / _` | / _ \| '__|
-     | (_| || |_| || || (_| ||  __/| |
-      \__, | \__,_||_| \__,_| \___||_|
-       |___/
-
-
-    [Info] priority of 22376 task is changed to -20(C)
+           
+    # python3 guider/guider.py limitcpu -g 22371:50 -v
 
     [Info] limited cpu usage of yes(22371) process to 50%, it used 50%
 
-    [Info] limited cpu usage of yes(22371) process to 50%, it used 50%
-
-    [Info] limited cpu usage of yes(22371) process to 50%, it used 50%
-
-    [Info] limited cpu usage of yes(22371) process to 50%, it used 50%
+    [WARN] <guider(574420)> started 1th guider(574420)
+    
+    [WARN] <guider(574420)> 1th guider(574420) took 0.421747 seconds to finish one job
 
 >>>
            
-    # ./guider.py setsched r:90:22371
+    # python3 guider/guider.py sigtrace -g a.out
 
-
-                    _      _
-       __ _  _   _ (_)  __| |  ___  _ __
-      / _` || | | || | / _` | / _ \| '__|
-     | (_| || |_| || || (_| ||  __/| |
-      \__, | \__,_||_| \__,_| \___||_|
-       |___/
-
-
-    [Info] priority of 22371 task is changed to 90(R)
+    [INFO] start profiling a.out(3100585)...
+    
+    0.000130 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    0.000276 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    0.000287 [SIGRT1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    0.000307 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    0.000317 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    0.000326 [SIGRT2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955804 [SIGCHLD] {si_code=CLD_EXITED si_pid=3100586, si_uid=0, si_status=0 si_utime=0, si_stime=0}
+    1.955816 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955826 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955836 [SIGRT3] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955846 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955856 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955866 [SIGRT4] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955875 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955884 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955893 [SIGRT5] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955903 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955912 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955922 [SIGRT6] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955931 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955941 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955950 [SIGRT7] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955959 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955969 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955978 [SIGRT8] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955987 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.955997 [SIGUSR2] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.956006 [SIGRT9] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.956015 [SIGUSR1] {si_code=SI_USER si_pid=a.out(3100585), si_uid=root(0)}
+    1.956025 [SIGSEGV] {si_code=SEGV_MAPERR si_addr=0x4d2}
+    
+    2.191489 +++ exited a.out(3100585) with 139 +++
 
 >>>
            
-    # ./guider.py kill -stop 12345
+    # python3 guider/guider.py setsched r:90:22371
 
-
-                    _      _
-       __ _  _   _ (_)  __| |  ___  _ __
-      / _` || | | || | / _` | / _ \| '__|
-     | (_| || |_| || || (_| ||  __/| |
-      \__, | \__,_||_| \__,_| \___||_| 
-       |___/
-
-
-    [Info] sent signal SIGSTOP to 10594 process
+    [Info] changed the priority of guider(22371) to 90[R]
 
 >>>
            
-    # ./guider.py record -a -e m,b
+    # python3 guider/guider.py remote -g a.out -c usercall:write#1#HOOK#4
+
+    [usercall] write(7f94ed747140)(1, HOOK, 4) = 0x4(4)
+
+>>>
+           
+    # python3 guider/guider.py printenv -g systemd
+
+    [ systemd(1) ]
+    -----------------------------------------------------------------------------
+    HOME=/
+    init=/sbin/init
+    NETWORK_SKIP_ENSLAVED=
+    recovery=
+    TERM=linux
+    drop_caps=
+    BOOT_IMAGE=/boot/vmlinuz-5.3.0-28-generic
+    PATH=/sbin:/usr/sbin:/bin:/usr/bin
+    PWD=/
+    rootmnt=/root
+
+    [ systemd(3310) ]
+    -----------------------------------------------------------------------------
+    LANG=en_US.UTF-8
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    NOTIFY_SOCKET=/run/systemd/notify
+    HOME=/home/syjung
+    LOGNAME=syjung
+    USER=syjung
+    SHELL=/bin/bash
+    INVOCATION_ID=bbc56cc8552e4a1d815197e0a6160270
+    JOURNAL_STREAM=9:10617556
+    XDG_RUNTIME_DIR=/run/user/1002
+
+    [ systemd(7094) ]
+    -----------------------------------------------------------------------------
+    LANG=en_US.UTF-8
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    NOTIFY_SOCKET=/run/systemd/notify
+    HOME=/home/peacelee
+    LOGNAME=peacelee
+    USER=peacelee
+    SHELL=/bin/bash
+    INVOCATION_ID=be65ebdd72964e09a3ac06495261702b
+    JOURNAL_STREAM=9:31410
+    XDG_RUNTIME_DIR=/run/user/1004
+
+>>>
+           
+    # python3 guider/guider.py kill -stop yes
+
+    [Info] sent SIGSTOP to yes(10594)
+
+>>>
+           
+    # python3 guider/guider.py printbind -g yes
+
+    [Function Bind Info] [Target: yes(410113)]
+    ==========================================================================================================================================================
+    Path      Type Sym[Bind/Vis] => Link
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+    [/usr/bin/yes]
+    	NOTYPE _ITM_deregisterTMCloneTable@GLIBC_2.2.5[WEAK/DEFAULT] => NONE
+    	NOTYPE _ITM_registerTMCloneTable@GLIBC_2.2.5[WEAK/DEFAULT] => NONE
+    	  FUNC __ctype_b_loc@GLIBC_2.2.5[GLOBAL/DEFAULT] => __ctype_b_loc/0x7f474b600400[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x37400]
+    	  FUNC __cxa_atexit@GLIBC_2.2.5[GLOBAL/DEFAULT] => __cxa_atexit@GLIBC_2.2.5/0x7f474b612f60[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x49f60]
+    	  FUNC __cxa_finalize@GLIBC_2.2.5[WEAK/DEFAULT] => __cxa_finalize@GLIBC_2.2.5/0x7f474b613090[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x4a090]
+    	  FUNC __fpending@GLIBC_2.2.5[GLOBAL/DEFAULT] => __fpending@GLIBC_2.2.5/0x7f474b658f80[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x8ff80]
+    	  FUNC __fprintf_chk[GLOBAL/DEFAULT] => __fprintf_chk@GLIBC_2.14/0x7f474b6fa110[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x131110]
+    	  FUNC __freading@GLIBC_2.2.5[GLOBAL/DEFAULT] => __freading@GLIBC_2.2.5/0x7f474b658e90[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x8fe90]
+    	NOTYPE __gmon_start__@GLIBC_2.14[WEAK/DEFAULT] => NONE
+    	  FUNC __libc_start_main@GLIBC_2.2.5[GLOBAL/DEFAULT] => __libc_start_main@GLIBC_2.2.5/0x7f474b5effc0[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x26fc0]
+    	  FUNC __printf_chk@GLIBC_2.2.5[GLOBAL/DEFAULT] => __printf_chk@GLIBC_2.2.5/0x7f474b6fa040[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x131040]
+    	  FUNC __stack_chk_fail@GLIBC_2.2.5[GLOBAL/DEFAULT] => __stack_chk_fail@GLIBC_2.2.5/0x7f474b6fbb00[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x132b00]
+    	  FUNC _exit@GLIBC_2.2.5[GLOBAL/DEFAULT] => _Exit@GLIBC_2.3/0x7f474b6af290[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0xe6290]
+    	  FUNC abort@GLIBC_2.2.5[GLOBAL/DEFAULT] => abort@GLIBC_2.2.5/0x7f474b5ee72e[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x2572e]
+    	  FUNC bindtextdomain@GLIBC_2.2.5[GLOBAL/DEFAULT] => bindtextdomain@GLIBC_2.2.5/0x7f474b600920[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x37920]
+    	  FUNC calloc[GLOBAL/DEFAULT] => calloc@GLIBC_2.2.5/0x7f474b667c90[/usr/lib/x86_64-linux-gnu/libc-2.31.so/0x9ec90]
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>>>
+           
+    # python3 guider/guider.py rec -a -e m,b
 
     [Thread Info] [ Elapsed: 2.050 ] [ Start: 2849868.198 ] [ Running: 112 ] [ CtxSwc: 3357 ] [ LogSize: 4054 KB ] [ Unit: Sec/MB/NR ]
     ==========================================================================================================================================================
@@ -514,7 +862,95 @@ Output
        
 >>>
        
-    # ./guider.py syscrecord
+    # python3 guider/guider.py iorec -s
+    # python3 guider/guider.py report -a
+
+    [Thread Block Info] (Unit: NR)
+    ==========================================================================================================================================================
+               ID               OPT    NrDev                TOTAL         SEQUENTIAL(    %)      FS              PATH        
+                                                         [ACCESS]                     COUNT                                  
+    ==========================================================================================================================================================
+              TOTAL            READ      8:3               131.8M             131.3M( 99.6)      -       /dev/sda3
+                                              [   4.0K -    7.0K]                       370                                  
+                                              [  16.0K -   31.0K]                        11                                  
+                                              [  32.0K -   63.0K]                         6                                  
+                                              [  64.0K -  127.0K]                         5                                  
+                                              [ 128.0K -  255.0K]                      1037                                  
+                                       253:0               131.8M             131.3M( 99.6)     ext4     / <rw,relatime>
+                                              [   4.0K -    7.0K]                       370                                  
+                                              [  16.0K -   31.0K]                        11                                  
+                                              [  32.0K -   63.0K]                         6                                  
+                                              [  64.0K -  127.0K]                         5                                  
+                                              [ 128.0K -  255.0K]                      1037                                  
+                              WRITE    253:0                40.0K              20.0K( 50.0)     ext4     / <rw,relatime>
+                                              [   4.0K -    7.0K]                        10                                  
+                                         8:3                24.0K              20.0K( 83.3)      -       /dev/sda3
+                                              [   4.0K -    7.0K]                         6                                  
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+              guider(4011197)  READ      8:3               100.0M             100.0M(100.0)      -       /dev/sda3
+                                              [  16.0K -   31.0K]                         2                                  
+                                              [  32.0K -   63.0K]                         1                                  
+                                              [  64.0K -  127.0K]                         1                                  
+                                              [ 128.0K -  255.0K]                       799                                  
+                                       253:0               100.0M             100.0M(100.0)     ext4     / <rw,relatime>
+                                              [  16.0K -   31.0K]                         2                                  
+                                              [  32.0K -   63.0K]                         1                                  
+                                              [  64.0K -  127.0K]                         1                                  
+                                              [ 128.0K -  255.0K]                       799                                  
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    [Thread FS Info] (Unit: NR)
+    ==========================================================================================================================================================
+               ID                 OPT    NrDev        INODE         Size           FS PATH                                                                       
+    ==========================================================================================================================================================
+              TOTAL             WRITE                              16.0K 
+                                         253:0                     16.0K         ext4 / <rw,relatime>                                                            
+                                                          0        16.0K                                                                                         
+                                 READ                             131.8M 
+                                           0:3                      1.4M            ? ?                                                                          
+                                                          0         1.4M                                                                                         
+                                         253:0                    130.4M         ext4 / <rw,relatime>                                                            
+                                                   24520383       100.0M              /home/peacelee/guider/guider/TEST2[100.0M]                                 
+                                                   24520372        20.0M              /home/peacelee/guider/guider/TEST[20.0M]                                   
+                                                   24520353        10.0M              /home/peacelee/guider/guider/TEST3[10.0M]                                  
+                                                    6030383        84.0K                                                                                         
+                                                    6819964        72.0K                                                                                         
+                                                    6029790        68.0K                                                                                         
+                                                    6031485        44.0K                                                                                         
+                                                    6031543        40.0K                                                                                         
+                                                    6819797        16.0K                                                                                         
+                                                    6035523        16.0K                                                                                         
+                                                          0        16.0K                                                                                         
+                                                    6818557         4.0K                                                                                         
+                                                    6818689         4.0K                                                                                         
+                                                    7078584         4.0K                                                                                         
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+              guider(4011197)    READ                             100.0M 
+                                         253:0                    100.0M         ext4 / <rw,relatime>                                                            
+                                                   24520383       100.0M              /home/peacelee/guider/guider/TEST2[100.0M]                                 
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+              guider(4011193)    READ                              20.0M 
+                                         253:0                     20.0M         ext4 / <rw,relatime>                                                            
+                                                   24520372        20.0M              /home/peacelee/guider/guider/TEST[20.0M]                                   
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------
+       
+>>>
+       
+    # python3 guider/guider.py iorec -s
+    # python3 guider/guider.py report -q RALIST
+    # python3 guider/guider.py readahead readahead.list
+
+    [INFO] start readahead from '/home/peacelee/guider/guider/readahead.list'
+
+    [INFO] changed the CPU scheduling priority for guider(4011281) to 10[C]
+
+    [INFO] changed the I/O scheduling priority for guider(4011281) to IOPRIO_CLASS_IDLE(0)[IOPRIO_WHO_PROCESS]
+
+    [INFO] finished readahead a total of 130.0M data for 0.002 sec
+       
+>>>
+       
+    # python3 guider/guider.py sysrec 
 
     [Thread Syscall Info] (Unit: Sec/NR)
     ==========================================================================================================================================================
@@ -555,55 +991,7 @@ Output
        
 >>>
        
-    # ./guider.py record -e b
-
-    [Thread Block Info] (Unit: KB/NR)
-    ==========================================================================================================================================================
-              ID              OPT    NrDev            TOTAL       SEQUENTIAL(    %)      FS              PATH
-                                                   [ACCESS]                   COUNT
-    ==========================================================================================================================================================
-             TOTAL           READ     8:33          170,624          158,356( 92.8)     ext4          /dev/sdc1
-                                            [   4K -    7K]                   2,024
-                                            [   8K -   15K]                      21
-                                            [  16K -   31K]                      43
-                                            [  32K -   63K]                      44
-                                            [  64K -  127K]                     155
-                                            [ 128K -  255K]                     112
-                                            [ 256K -  511K]                     510
-                                            [ 512K - 1023K]                       2
-
-                            WRITE     8:33                8                4( 50.0)     ext4          /dev/sdc1
-                                            [   4K -    7K]                       2
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 cron(3115)  READ     8:33              644              576( 89.4)     ext4          /dev/sdc1
-                                            [   4K -    7K]                     161
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 cat(10392)  READ     8:33              604              404( 66.9)     ext4          /dev/sdc1
-                                            [   4K -    7K]                     110
-                                            [  16K -   31K]                       1
-                                            [  32K -   63K]                       1
-                                            [  64K -  127K]                       1
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 bash(9085)  READ     8:33               28                4( 14.3)     ext4          /dev/sdc1
-                                            [   4K -    7K]                       7
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-                 cat(10395)  READ     8:33          169,348          157,384( 92.9)     ext4          /dev/sdc1
-                                            [   4K -    7K]                   1,746
-                                            [   8K -   15K]                      21
-                                            [  16K -   31K]                      42
-                                            [  32K -   63K]                      43
-                                            [  64K -  127K]                     154
-                                            [ 128K -  255K]                     112
-                                            [ 256K -  511K]                     510
-                                            [ 512K - 1023K]                       2
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-       kworker/u50:0(10304) WRITE     8:33                8                4( 50.0)     ext4          /dev/sdc1
-                                            [   4K -    7K]                       2
-    ----------------------------------------------------------------------------------------------------------------------------------------------------------
-       
->>>
-       
-    # ./guider.py record -e L
+    # python3 guider/guider.py rec -e L
 
     [Thread Futex Lock Info] [ Elapsed : 1.225 ] (Unit: Sec/NR)
     ==========================================================================================================================================================
@@ -625,7 +1013,7 @@ Output
        
 >>>
        
-    # ./guider.py record -s . -K openfile:getname::**string
+    # python3 guider/guider.py rec -s . -K openfile:getname::**string
 
     [Thread KERNEL Event Info]
     ==========================================================================================================================================================
@@ -674,8 +1062,9 @@ Output
        
 >>>
        
-    # ./guider.py funcrecord -s .
-    # ./guider.py guider.dat -o . -a
+    # python3 guider/guider.py funcrec -s .
+    # python3 guider/guider.py report -a
+    # cat guider.out
 
     [Function CPU Info] [Cnt: 394] [Interval: 8ms] (USER)
     ==========================================================================================================================================================
@@ -708,10 +1097,11 @@ Output
        
 >>>
        
-    # ./guider.py funcrecord -e m -s .
-    # ./guider.py guider.dat -o . -a
+    # python3 guider/guider.py funcrec -e m -s .
+    # python3 guider/guider.py report -a
+    # cat guider.out
 
-    [Function Page Info] [Total: 11416KB] [Alloc: 11444KB(817)] [Free: 188KB(47)] (USER)
+    [Function Page Info] [Total: 11.4M] [Alloc: 11.4M(817)] [Free: 188.0K(47)] (USER)
     ==========================================================================================================================================================
      Usage ( Usr  / Buf  / Ker  )|___________________Function____________________|________________LifeTime________________|______________Binary_______________
     ==========================================================================================================================================================
@@ -735,7 +1125,7 @@ Output
       +      8K(     4/     0/     4)| <- _dl_sysdep_start [/lib/x86_64-linux-gnu/ld-2.19.so]
     ----------------------------------------------------------------------------------------------------------------------------------------------------------
   
-    [Function Page Info] [Total: 11416KB] [Alloc: 11444KB(817)] [Free: 188KB(47)] (KERNEL)
+    [Function Page Info] [Total: 11.4K] [Alloc: 11.4K(817)] [Free: 188.0K(47)] (KERNEL)
     ==========================================================================================================================================================
      Usage ( Usr  / Buf  / Ker  )|___________________Function____________________|__________________________________LifeTime__________________________________
     ==========================================================================================================================================================
@@ -752,11 +1142,11 @@ Output
        
 >>>
        
-    # ./guider.py filerecord
+    # python3 guider/guider.py filerec 
 
-    [File Usage Info] [ File: 281 ] [ RAM: 78056(KB) ] [ Keys: Foward/Back/Save/Quit ]
+    [File Usage Info] [ File: 281 ] [ RAM: 78.0M ] [ Keys: Foward/Back/Save/Quit ]
     ==========================================================================================================================================================
-    __RAM(KB)___|_File(KB)_|__%___|_____________________________________________________Library & Process_____________________________________________________
+    ____RAM_____|___File___|__%___|_____________________________________________________Library & Process_____________________________________________________
     ==========================================================================================================================================================
           7,616 |    7,616 |  100 | /run/samba/locking.tdb [Proc: 10] [Link: 1]
                                   |             smbd ( 2937) |             smbd ( 9178) |             smbd (21387) |             smbd ( 3356) |
@@ -792,41 +1182,83 @@ Output
        
 >>>
        
-    # ./guider.py draw guider.out
+    $ python3 guider/guider.py top -o guider.out
+    $ python3 guider/guider.py draw guider.out
 
-![guider-graph-image](https://cloud.githubusercontent.com/assets/15862689/23285445/a03e0bf0-fa74-11e6-9f5a-872a3f10fe48.png)    
-![guider-chart-image](https://cloud.githubusercontent.com/assets/15862689/24597375/67f31f22-1880-11e7-8290-64554ed2859c.png)
+>>>
+
+<img alt="graph" src="https://user-images.githubusercontent.com/15862689/67160607-9b1fc680-f38d-11e9-988e-5d90729d983e.png" width="100%" height="100%">
+<img alt="chart" src="https://user-images.githubusercontent.com/15862689/67160609-9bb85d00-f38d-11e9-9280-9ab649bb56b1.png" width="100%" height="100%">
+
+>>>
+       
+    # python3 guider/guider.py rec -s guider.dat
+    # python3 guider/guider.py draw guider.dat
+
+>>>
+
+<img alt="timeline" src="https://github.com/iipeace/iipeace.github.io/blob/master/samples/guider_timeline.png" width="100%" height="100%">
+
+>>>
+       
+    # python3 guider/guider.py utop -g testTask -H -o guider.out
+    # python3 guider/guider.py drawflame guider.out
+
+>>>
+
+<img alt="flamegraph" src="https://github.com/iipeace/iipeace.github.io/blob/master/samples/guider_flamegraph.png" width="100%" height="100%">
+
+>>>
+       
+    $ python3 guider/guider.py top -o test1.out
+    $ python3 guider/guider.py top -o test2.out
+    $ python3 guider/guider.py top -o test3.out
+    $ python3 guider/guider.py top -o test4.out
+    $ python3 guider/guider.py top -o test5.out
+    $ python3 guider/guider.py drawavg "test1.out, test2.out, test3.out, test4.out, test5.out"
+
+>>>
+
+<img alt="drawavg" src="https://github.com/iipeace/iipeace.github.io/blob/master/samples/guider_drawavg.svg" width="100%" height="100%">
+
+>>>
+       
+    $ python3 guider/guider.py req "https://www.google.com|https://www.naver.com" -R 1000 -o guider.out
+    $ python3 guider/guider.py drawreq guider.out
+
+>>>
+
+<img alt="drawreq" src="https://github.com/iipeace/iipeace.github.io/blob/master/samples/guider_drawreq.svg" width="100%" height="100%">
+
+>>>
+
+    webservice
+
+>>>
+
+<img alt="dashboard" src="https://user-images.githubusercontent.com/15862689/67160178-0024ed80-f389-11e9-9a09-6a8eb96e2785.png" width="100%" height="100%">
 
 How to use
 =======
 
 ```
 Enter the following command to see all commands supported by the guider:
-    $ ./guider.py --help
-    $ python -m guider --help
+    $ python3 guider/guider.py --help
+    $ python3 -m guider --help
     $ guider --help
 
 Enter the following command to start tracing for all threads:
-    # ./guider.py record -a
+    # python3 guider/guider.py rec -a
 
 Enter the following command to start monitoring for all processes:
-    $ ./guider.py top -a
+    $ python3 guider/guider.py top -a
 
 Enter the command in the format shown bellow to see options and examples for each command:
-    $ ./guider.py record -h
-    $ ./guider.py top -h
+    $ python3 guider/guider.py rec -h
+    $ python3 guider/guider.py top -h
 
 Visit the following link to see the output of guider:
     - https://github.com/iipeace/guider/wiki
-```
-
-
-Requirement
-=======
-
-```
-- linux kernel (>= 2.6)
-- python (>= 2.7)
 ```
 
 
@@ -834,14 +1266,16 @@ Build & Installation
 =======
 
 ```
-If you can run 'pip' on your system then just enter the following command:
-    # pip install guider
+If you can run 'pip' on your system then just enter the following commands:
+    # pip3 install guider
+    # pip3 install guider --no-deps
 and just run the following commands:
-    # python -m guider
+    # python3 -m guider
     # guider
 
 Otherwise, download the source from https://github.com/iipeace/guider,
-and just run "guider/guider.py" on shell.
+and just run the following command:
+    # python3 guider/guider.py
 
 If you want to run guider faster and lighter after downloading the source,
 then build and install it on your system as below.
@@ -853,7 +1287,7 @@ Kernel Configuration
 =======
 
 ```
-Enable kernel options as below to take advantage of all the features
+Enable kernel options as below to take advantage of all profile features,
 And if CONFIG_STRICT_MEMORY_RWX is enabled then disable it
 
 CONFIG_RING_BUFFER
@@ -894,57 +1328,134 @@ Help
 
 ```
 Usage:
-    $ ./guider.py COMMAND|FILE [OPTIONS] [--help] [--version]
-
+    $ ./guider.py COMMAND|FILE [OPTIONS] [--help]
+                
 COMMAND:
-    [monitor]   top         <process>
-                threadtop   <thread>
-                bgtop       <background>
-                stacktop    <stack>
-                perftop     <PMU>
-                memtop      <memory>
-                disktop     <storage>
-                wsstop      <memory>
-                reptop      <json>
-                filetop     <file>
+    [CONTROL]       hook              <Function>      (Linux)
+                    kill/tkill        <Signal>        (Linux/MacOS)
+                    limitcpu          <CPU>           (Linux)
+                    pause             <Thread>        (Linux)
+                    remote            <Command>       (Linux)
+                    rlimit            <Resource>      (Linux)
+                    setafnt           <Affinity>      (Linux)
+                    setcpu            <Clock>         (Linux)
+                    setsched          <Priority>      (Linux)
 
-    [profile]   record      <thread>
-                funcrecord  <function>
-                filerecord  <file>
-                sysrecord   <system>
+    [LOG]           logdlt            <DLT>           (Linux)
+                    logjrl            <Journal>       (Linux)
+                    logkmsg           <Kernel>        (Linux)
+                    logsys            <Syslog>        (Linux)
+                    printdlt          <DLT>           (Linux/MacOS)
+                    printjrl          <Journal>       (Linux)
+                    printkmsg         <Kernel>        (Linux)
+                    printsys          <Syslog>        (Linux)
 
-    [trace]     strace      <syscall>
-                mem         <page>
+    [MONITOR]       atop              <All>           (Linux)
+                    bgtop             <Background>    (Linux/MacOS/Windows)
+                    btop              <Function>      (Linux)
+                    cgtop             <Cgroup>        (Linux)
+                    ctop              <Threshold>     (Linux/MacOS/Windows)
+                    dbustop           <D-Bus>         (Linux)
+                    disktop           <Storage>       (Linux/MacOS/Windows)
+                    dlttop            <DLT>           (Linux/MacOS)
+                    ftop              <File>          (Linux/MacOS)
+                    mtop              <Memory>        (Linux)
+                    ntop              <Network>       (Linux/MacOS/Windows)
+                    ptop              <PMU>           (Linux)
+                    pytop             <Python>        (Linux)
+                    rtop              <JSON>          (Linux/MacOS/Windows)
+                    stacktop          <Stack>         (Linux)
+                    systop            <Syscall>       (Linux)
+                    top               <Process>       (Linux/MacOS/Windows)
+                    ttop              <Thread>        (Linux)
+                    utop              <Function>      (Linux)
+                    wtop              <WSS>           (Linux)
 
-    [visual]    draw        <image>
-                cpudraw     <cpu>
-                memdraw     <memory>
-                vssdraw     <vss>
-                rssdraw     <rss>
-                leakdraw    <leak>
-                iodraw      <I/O>
+    [NETWORK]       cli               <Client>        (Linux/MacOS/Windows)
+                    event             <Event>         (Linux)
+                    list              <List>          (Linux/MacOS/Windows)
+                    send              <Signal>        (Linux)
+                    server            <Server>        (Linux/MacOS)
+                    start             <Signal>        (Linux)
 
-    [control]   kill        <signal>
-                cpulimit    <cpu>
-                setsched    <priority>
-                getaffinity <affinity>
-                setaffinity <affinity>
+    [PROFILE]       filerec           <File>          (Linux)
+                    funcrec           <Function>      (Linux)
+                    genrec            <System>        (Linux)
+                    iorec             <I/O>           (Linux)
+                    mem               <Page>          (Linux)
+                    rec               <Thread>        (Linux)
+                    report            <Report>        (Linux)
+                    sysrec            <Syscall>       (Linux)
 
-    [test]      alloctest   <mem>
+    [TEST]          cputest           <CPU>           (Linux/MacOS/Windows)
+                    iotest            <Storage>       (Linux/MacOS/Windows)
+                    memtest           <Memory>        (Linux/MacOS/Windows)
+                    nettest           <Network>       (Linux)
 
-    [util]      convert     <text>
+    [TRACE]         btrace            <Function>      (Linux)
+                    leaktrace         <Leak>          (Linux)
+                    pytrace           <Python>        (Linux)
+                    sigtrace          <Signal>        (Linux)
+                    strace            <Syscall>       (Linux)
+                    utrace            <Function>      (Linux)
 
-    [comm]      list        <list>
-                start       <signal>
-                send        <signal>
-                event       <event>
-                server      <server>
-                client      <client>
+    [UTIL]          addr2sym          <Symbol>        (Linux/MacOS/Windows)
+                    comp              <Compress>      (Linux/MacOS/Windows)
+                    decomp            <Decompress>    (Linux/MacOS/Windows)
+                    dump              <Memory>        (Linux)
+                    exec              <Command>       (Linux/MacOS/Windows)
+                    getafnt           <Affinity>      (Linux)
+                    mkcache           <Cache>         (Linux/MacOS/Windows)
+                    mount             <Mount>         (Linux)
+                    ping              <ICMP>          (Linux/MacOS/Windows)
+                    print             <File>          (Linux/MacOS/Windows)
+                    printbind         <Funcion>       (Linux)
+                    printcg           <Cgroup>        (Linux)
+                    printdbus         <D-Bus>         (Linux)
+                    printdbusintro    <D-Bus>         (Linux)
+                    printdbusstat     <D-Bus>         (Linux)
+                    printdbussub      <D-Bus>         (Linux)
+                    printdir          <Dir>           (Linux/MacOS/Windows)
+                    printenv          <Env>           (Linux)
+                    printext          <Ext4>          (Linux/MacOS/Windows)
+                    printinfo         <System>        (Linux)
+                    printns           <Namespace>     (Linux)
+                    printsig          <Signal>        (Linux)
+                    printsvc          <systemd>       (Linux)
+                    pstree            <Process>       (Linux/MacOS/Windows)
+                    readahead         <File>          (Linux)
+                    readelf           <File>          (Linux/MacOS/Windows)
+                    req               <URL>           (Linux/MacOS/Windows)
+                    strings           <Text>          (Linux/MacOS/Windows)
+                    sym2addr          <Address>       (Linux/MacOS/Windows)
+                    systat            <Status>        (Linux)
+                    topdiff           <Diff>          (Linux/MacOS/Windows)
+                    topsum            <Summary>       (Linux/MacOS/Windows)
+                    umount            <Unmount>       (Linux)
+                    watch             <File>          (Linux)
+
+    [VISUAL]        convert           <Text>          (Linux/MacOS/Windows)
+                    draw              <System>        (Linux/MacOS/Windows)
+                    drawavg           <Average>       (Linux/MacOS/Windows)
+                    drawcpu           <CPU>           (Linux/MacOS/Windows)
+                    drawcpuavg        <CPU>           (Linux/MacOS/Windows)
+                    drawdelay         <Delay>         (Linux/MacOS/Windows)
+                    drawflame         <Function>      (Linux/MacOS/Windows)
+                    drawio            <I/O>           (Linux/MacOS/Windows)
+                    drawleak          <Leak>          (Linux/MacOS/Windows)
+                    drawmem           <Memory>        (Linux/MacOS/Windows)
+                    drawmemavg        <Memory>        (Linux/MacOS/Windows)
+                    drawreq           <URL>           (Linux/MacOS/Windows)
+                    drawrss           <RSS>           (Linux/MacOS/Windows)
+                    drawrssavg        <RSS>           (Linux/MacOS/Windows)
+                    drawtime          <Timeline>      (Linux/MacOS/Windows)
+                    drawvss           <VSS>           (Linux/MacOS/Windows)
+                    drawvssavg        <VSS>           (Linux/MacOS/Windows)
 
 FILE:
     Profile file (e.g. guider.dat)
     Report  file (e.g. guider.out)
 
-OPTIONS:
+Options:
     Check COMMAND with --help (e.g. ./guider.py top --help)
 ```
